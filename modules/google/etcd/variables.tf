@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+variable "external_endpoints" {
+  type = "list"
+}
+
+variable "instance_count" {
+  default = "3"
+}
+
 variable "dns_enabled" {
   type = "string"
 }
@@ -58,6 +66,14 @@ variable "disk_type" {
 variable "disk_size" {
   type        = "string"
   description = "The size of the volume in gigabytes for the root block device."
+}
+
+variable "tls_enabled" {
+  default = false
+}
+
+variable "tls_zip" {
+  type = "string"
 }
 
 # vim: ts=2:sw=2:sts=2:et:ai

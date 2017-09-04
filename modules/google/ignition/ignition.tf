@@ -6,7 +6,6 @@ data "ignition_config" "main" {
   ]
 
   systemd = [
-    "${data.ignition_systemd_unit.etcd-member.id}",
     "${data.ignition_systemd_unit.docker.id}",
     "${data.ignition_systemd_unit.locksmithd.id}",
     "${data.ignition_systemd_unit.kubelet.id}",

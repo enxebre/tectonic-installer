@@ -69,7 +69,7 @@ module "network" {
 
 module "etcd" {
   source = "../../modules/google/etcd"
-
+  instance_count    = "${var.tectonic_experimental ? 0 : var.tectonic_etcd_count > 0 ? var.tectonic_etcd_count : length(var.tectonic_gcp_zones) == 5 ? 5 : 3}"
   zone_list         = "${var.tectonic_gcp_zones}"
   machine_type      = "${var.tectonic_gcp_etcd_gce_type}"
   managed_zone_name = "${var.google_managedzone_name}"
@@ -84,6 +84,9 @@ module "etcd" {
 
   master_subnetwork_name = "${module.network.master_subnetwork_name}"
   dns_enabled            = "${!var.tectonic_experimental && length(compact(var.tectonic_etcd_servers)) == 0}"
+  tls_enabled = "${var.tectonic_etcd_tls_enabled}"
+  tls_zip = "${module.bootkube.etcd_tls_zip}"
+  external_endpoints = ["${compact(var.tectonic_etcd_servers)}"]
 }
 
 module "masters" {
