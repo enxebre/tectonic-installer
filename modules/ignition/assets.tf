@@ -97,7 +97,6 @@ data "ignition_file" "gcs_puller" {
   }
 }
 
-
 data "ignition_systemd_unit" "locksmithd" {
   name = "locksmithd.service"
   mask = true
