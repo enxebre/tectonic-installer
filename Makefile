@@ -14,7 +14,7 @@ TF_CMD = terraform
 
 include ./makelib/*.mk
 
-$(info Using build directory [${BUILD_DIR}])
+$(info Using build directory "[${BUILD_DIR}])
 
 .PHONY: all
 all: $(INSTALLER_BIN) custom-providers
@@ -121,6 +121,10 @@ examples:
 			config.tf, \
 			platforms/vmware/variables.tf)
 
+	$(call terraform-examples, \
+			examples/terraform.tfvars.gcp, \
+			config.tf, \
+			platforms/gcp/variables.tf)
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)
