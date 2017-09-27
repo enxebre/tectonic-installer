@@ -56,6 +56,10 @@ variable "disk_size" {
   description = "The size of the volume in gigabytes for the root block device."
 }
 
-variable "ign_gcs_puller_id" {
+variable "public_ssh_key" {
+  type = "string"
+}
+
+variable "kubeconfig_content" {
   type = "string"
 }

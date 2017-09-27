@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 provider "google" {
-  region      = "${var.tectonic_gcp_region}"
-  version     = "0.1.3"
+  region  = "${var.tectonic_gcp_region}"
+  version = "0.1.3"
 }
 
 module "network" {
@@ -75,8 +75,8 @@ module "etcd" {
   cluster_name      = "${var.tectonic_cluster_name}"
   base_domain       = "${var.tectonic_base_domain}"
   container_image   = "${var.tectonic_container_images["etcd"]}"
-
-  cl_channel = "${var.tectonic_cl_channel}"
+  public_ssh_key    = "${var.tectonic_gcp_ssh_key}"
+  cl_channel        = "${var.tectonic_cl_channel}"
 
   disk_type = "${var.tectonic_gcp_etcd_disktype}"
   disk_size = "${var.tectonic_gcp_etcd_disk_size}"
@@ -97,12 +97,12 @@ module "etcd" {
 module "masters" {
   source = "../../modules/gcp/master-igm"
 
-  region              = "${var.tectonic_gcp_region}"
-  instance_count      = "${var.tectonic_master_count}"
-  zone_list           = "${var.tectonic_gcp_zones}"
-  machine_type        = "${var.tectonic_gcp_master_gce_type}"
-  cluster_name        = "${var.tectonic_cluster_name}"
-  assets_gcs_location = "${google_storage_bucket.tectonic.name}/${google_storage_bucket_object.tectonic-assets.name}"
+  region         = "${var.tectonic_gcp_region}"
+  instance_count = "${var.tectonic_master_count}"
+  zone_list      = "${var.tectonic_gcp_zones}"
+  machine_type   = "${var.tectonic_gcp_master_gce_type}"
+  cluster_name   = "${var.tectonic_cluster_name}"
+  public_ssh_key = "${var.tectonic_gcp_ssh_key}"
 
   master_subnetwork_name      = "${module.network.master_subnetwork_name}"
   master_targetpool_self_link = "${module.network.master_targetpool_self_link}"
@@ -112,16 +112,15 @@ module "masters" {
   disk_type = "${var.tectonic_gcp_master_disktype}"
   disk_size = "${var.tectonic_gcp_master_disk_size}"
 
+  kubeconfig_content                = "${module.bootkube.kubeconfig}"
   ign_k8s_node_bootstrap_service_id = "${module.ignition_masters.k8s_node_bootstrap_service_id}"
   ign_bootkube_path_unit_id         = "${module.bootkube.systemd_path_unit_id}"
   ign_bootkube_service_id           = "${module.bootkube.systemd_service_id}"
   ign_docker_dropin_id              = "${module.ignition_masters.docker_dropin_id}"
   ign_kubelet_service_id            = "${module.ignition_masters.kubelet_service_id}"
-  ign_init_assets_service_id        = "${module.ignition_masters.init_assets_service_id}"
   ign_locksmithd_service_id         = "${module.ignition_masters.locksmithd_service_id}"
   ign_max_user_watches_id           = "${module.ignition_masters.max_user_watches_id}"
   ign_installer_kubelet_env_id      = "${module.ignition_masters.installer_kubelet_env_id}"
-  ign_gcs_puller_id                 = "${module.ignition_masters.gcs_puller_id}"
   ign_tectonic_path_unit_id         = "${var.tectonic_vanilla_k8s ? "" : module.tectonic.systemd_path_unit_id}"
   ign_tectonic_service_id           = "${module.tectonic.systemd_service_id}"
   image_re                          = "${var.tectonic_image_re}"
@@ -136,6 +135,7 @@ module "workers" {
   zone_list      = "${var.tectonic_gcp_zones}"
   machine_type   = "${var.tectonic_gcp_worker_gce_type}"
   cluster_name   = "${var.tectonic_cluster_name}"
+  public_ssh_key = "${var.tectonic_gcp_ssh_key}"
 
   worker_subnetwork_name      = "${module.network.worker_subnetwork_name}"
   worker_targetpool_self_link = "${module.network.worker_targetpool_self_link}"
@@ -145,6 +145,7 @@ module "workers" {
   disk_type = "${var.tectonic_gcp_worker_disktype}"
   disk_size = "${var.tectonic_gcp_worker_disk_size}"
 
+  kubeconfig_content                = "${module.bootkube.kubeconfig}"
   ign_k8s_node_bootstrap_service_id = "${module.ignition_workers.k8s_node_bootstrap_service_id}"
   ign_installer_kubelet_env_id      = "${module.ignition_workers.installer_kubelet_env_id}"
   ign_docker_dropin_id              = "${module.ignition_workers.docker_dropin_id}"
@@ -152,7 +153,6 @@ module "workers" {
   ign_locksmithd_service_id         = "${module.ignition_masters.locksmithd_service_id}"
   ign_max_user_watches_id           = "${module.ignition_workers.max_user_watches_id}"
   ign_installer_kubelet_env_id      = "${module.ignition_workers.installer_kubelet_env_id}"
-  ign_gcs_puller_id                 = "${module.ignition_workers.gcs_puller_id}"
 }
 
 module "ignition_masters" {
@@ -163,11 +163,9 @@ module "ignition_masters" {
   container_images     = "${var.tectonic_container_images}"
   image_re             = "${var.tectonic_image_re}"
   kube_dns_service_ip  = "${module.bootkube.kube_dns_service_ip}"
-  kubeconfig_fetch_cmd = "/opt/gcs-puller.sh ${google_storage_bucket.tectonic.name}/${google_storage_bucket_object.kubeconfig.name} /etc/kubernetes/kubeconfig"
   kubelet_cni_bin_dir  = "${var.tectonic_calico_network_policy ? "/var/lib/cni/bin" : "" }"
   kubelet_node_label   = "node-role.kubernetes.io/master"
   kubelet_node_taints  = "node-role.kubernetes.io/master=:NoSchedule"
-  assets_location      = "${google_storage_bucket.tectonic.name}/${google_storage_bucket_object.tectonic-assets.name}"
 }
 
 module "ignition_workers" {
@@ -178,7 +176,6 @@ module "ignition_workers" {
   container_images     = "${var.tectonic_container_images}"
   image_re             = "${var.tectonic_image_re}"
   kube_dns_service_ip  = "${module.bootkube.kube_dns_service_ip}"
-  kubeconfig_fetch_cmd = "/opt/gcs-puller.sh ${google_storage_bucket.tectonic.name}/${google_storage_bucket_object.kubeconfig.name} /etc/kubernetes/kubeconfig"
   kubelet_cni_bin_dir  = "${var.tectonic_calico_network_policy ? "/var/lib/cni/bin" : "" }"
   kubelet_node_label   = "node-role.kubernetes.io/node"
   kubelet_node_taints  = ""

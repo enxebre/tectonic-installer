@@ -74,19 +74,6 @@ variable "ign_tectonic_path_unit_id" {
   type = "string"
 }
 
-variable "ign_gcs_puller_id" {
-  type = "string"
-}
-
-variable "ign_init_assets_service_id" {
-  type = "string"
-}
-
-variable "assets_gcs_location" {
-  type        = "string"
-  description = "Location on gcs of the Bootkube/Tectonic assets to use (bucket/key)"
-}
-
 variable "container_images" {
   description = "Container images to use"
   type        = "map"
@@ -95,4 +82,12 @@ variable "container_images" {
 variable "image_re" {
   description = "(internal) Regular expression used to extract repo and tag components from image strings"
   type        = "string"
+}
+
+variable "public_ssh_key" {
+  type = "string"
+}
+
+variable "kubeconfig_content" {
+  type = "string"
 }

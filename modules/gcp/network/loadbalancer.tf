@@ -1,5 +1,6 @@
 resource "google_compute_target_pool" "tectonic-master-targetpool" {
-  name = "tectonic-master-targetpool"
+  name             = "tectonic-master-targetpool"
+  session_affinity = "CLIENT_IP_PROTO"
 }
 
 resource "google_compute_target_pool" "tectonic-worker-targetpool" {
@@ -17,6 +18,15 @@ resource "google_compute_forwarding_rule" "tectonic-api-external-fwd-rule" {
   region                = "${var.gcp_region}"
   target                = "${google_compute_target_pool.tectonic-master-targetpool.self_link}"
   port_range            = "443"
+}
+
+resource "google_compute_forwarding_rule" "tectonic-api-external-ssh-fwd-rule" {
+  load_balancing_scheme = "EXTERNAL"
+  name                  = "tectonic-api-external-ssh-fwd-rule"
+  ip_address            = "${google_compute_address.tectonic-masters-ip.address}"
+  region                = "${var.gcp_region}"
+  target                = "${google_compute_target_pool.tectonic-master-targetpool.self_link}"
+  port_range            = "22"
 }
 
 resource "google_compute_address" "tectonic-ingress-ip" {
