@@ -18,7 +18,7 @@ resource "google_compute_instance_template" "tectonic-master-it" {
   name           = "tectonic-master-it"
   region         = "${var.region}"
   machine_type   = "${var.machine_type}"
-  can_ip_forward = false
+  can_ip_forward = true
 
   disk {
     source_image = "coreos-${var.cl_channel}"
@@ -48,8 +48,8 @@ resource "google_compute_instance_template" "tectonic-master-it" {
 }
 
 resource "google_compute_instance_group_manager" "tectonic-master-igm" {
-  count              = "${var.instance_count}"
-  target_size        = 1
+  count              = 1
+  target_size        = "${var.instance_count}"
   name               = "tectonic-master-igm-${count.index}"
   zone               = "${element(var.zone_list, count.index)}"
   instance_template  = "${google_compute_instance_template.tectonic-master-it.self_link}"

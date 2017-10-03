@@ -1,6 +1,6 @@
 resource "google_compute_target_pool" "tectonic-master-targetpool" {
   name             = "tectonic-master-targetpool"
-  session_affinity = "CLIENT_IP_PROTO"
+  session_affinity = "NONE"
 }
 
 resource "google_compute_target_pool" "tectonic-worker-targetpool" {
@@ -49,4 +49,38 @@ resource "google_compute_forwarding_rule" "tectonic-ingress-external-https-fwd-r
   region                = "${var.gcp_region}"
   target                = "${google_compute_target_pool.tectonic-worker-targetpool.self_link}"
   port_range            = "443"
+}
+
+resource "google_compute_region_backend_service" "tectonic-master-backend" {
+  name        = "tectonic-master-backend"
+  protocol    = "TCP"
+  timeout_sec = 10
+  session_affinity = "NONE"
+  backend {
+    group = "${var.master_instance_group[0]}"
+  }
+
+  health_checks = ["${google_compute_health_check.tectonic-master-backend-health-check.self_link}"]
+}
+
+resource "google_compute_health_check" "tectonic-master-backend-health-check" {
+  name = "tectonic-master-backend-health-check"
+//  unhealthy_threshold = 1
+  timeout_sec        = 1
+  check_interval_sec = 1
+
+  ssl_health_check {
+    port = "443"
+  }
+}
+
+resource "google_compute_forwarding_rule" "tectonic-api-internal-fwd-rule" {
+  load_balancing_scheme = "INTERNAL"
+  name                  = "tectonic-api-internal-fwd-rule"
+  ip_address            = "10.10.0.10"
+  region                = "${var.gcp_region}"
+  backend_service       = "${google_compute_region_backend_service.tectonic-master-backend.self_link}"
+  ports                 = ["443"]
+  network               = "${google_compute_network.tectonic-network.self_link}"
+  subnetwork            = "${google_compute_subnetwork.tectonic-master-subnet.self_link}"
 }

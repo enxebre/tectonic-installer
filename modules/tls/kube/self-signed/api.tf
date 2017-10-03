@@ -23,6 +23,7 @@ resource "tls_cert_request" "apiserver" {
 
   ip_addresses = [
     "${cidrhost(var.service_cidr, 1)}",
+    "10.10.0.10",
   ]
 }
 
