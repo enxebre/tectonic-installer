@@ -55,4 +55,9 @@ resource "google_compute_instance_group_manager" "tectonic-master-igm" {
   instance_template  = "${google_compute_instance_template.tectonic-master-it.self_link}"
   target_pools       = ["${var.master_targetpool_self_link}"]
   base_instance_name = "mstr"
+
+  named_port {
+    name = "https"
+    port = 443
+  }
 }

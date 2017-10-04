@@ -16,7 +16,7 @@ limitations under the License.
 
 provider "google" {
   region  = "${var.tectonic_gcp_region}"
-  version = "0.1.3"
+//  version = "0.1.3"
 }
 
 module "network" {
@@ -193,5 +193,6 @@ module "dns" {
   etcd_ip_addresses   = "${module.etcd.etcd_ip_addresses}"
   base_domain         = "${var.tectonic_base_domain}"
   tectonic_masters_ip = "${module.network.master_ip}"
+  tectonic_masters_ssh_ip = "${module.network.master_ssh_ip}"
   tectonic_ingress_ip = "${module.network.ingress_ip}"
 }

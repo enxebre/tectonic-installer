@@ -1,5 +1,5 @@
 locals {
-  "bootstrapping_host" = "${module.dns.kube_apiserver_fqdn}"
+  "bootstrapping_host" = "${module.dns.kube_apiserver_ssh_fqdn}"
 }
 
 module "bootstrapper" {

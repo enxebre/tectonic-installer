@@ -15,7 +15,11 @@ limitations under the License.
 */
 
 output "master_ip" {
-  value = "${google_compute_address.tectonic-masters-ip.address}"
+  value = "${google_compute_global_address.tectonic-masters-ip.address}"
+}
+
+output "master_ssh_ip" {
+  value = "${google_compute_address.tectonic-masters-ssh-ip.address}"
 }
 
 output "ingress_ip" {

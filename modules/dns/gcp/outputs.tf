@@ -7,6 +7,11 @@ output "kube_apiserver_fqdn" {
   value = "${join(".", compact(split(".", google_dns_record_set.api-external.name)))}"
 }
 
+output "kube_apiserver_ssh_fqdn" {
+  # Remove trailing dot from the name
+  value = "${join(".", compact(split(".", google_dns_record_set.api-ssh-external.name)))}"
+}
+
 output "kube_ingress_fqdn" {
   # Remove trailing dot from the name
   value = "${join(".", compact(split(".", google_dns_record_set.ingress-external.name)))}"

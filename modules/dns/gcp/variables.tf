@@ -42,6 +42,11 @@ variable "tectonic_masters_ip" {
   type        = "string"
 }
 
+variable "tectonic_masters_ssh_ip" {
+  description = "The master load balancer ip"
+  type        = "string"
+}
+
 variable "tectonic_ingress_ip" {
   description = "The ingress load balancer ip"
   type        = "string"
