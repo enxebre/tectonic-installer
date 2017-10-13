@@ -41,7 +41,7 @@ spec:
         - ./hyperkube
         - controller-manager
         - --allocate-node-cidrs=true
-        - --configure-cloud-routes=false
+        - --configure-cloud-routes=true
         - --cluster-cidr=${cluster_cidr}
         - --root-ca-file=/etc/kubernetes/secrets/ca.crt
         - --service-account-private-key-file=/etc/kubernetes/secrets/service-account.key
@@ -49,6 +49,7 @@ spec:
         - --node-monitor-grace-period=${node_monitor_grace_period}
         - --pod-eviction-timeout=${pod_eviction_timeout}
         - --cloud-provider=${cloud_provider}
+        - --cloud-config=/etc/kubernetes/cloud/config
         ${cloud_provider_config_flag}
         livenessProbe:
           httpGet:

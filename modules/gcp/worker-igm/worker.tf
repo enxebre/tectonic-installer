@@ -18,7 +18,7 @@ resource "google_compute_instance_template" "tectonic-worker-it" {
   name           = "tectonic-worker-it"
   region         = "${var.region}"
   machine_type   = "${var.machine_type}"
-  can_ip_forward = false
+  can_ip_forward = true
 
   disk {
     source_image = "coreos-${var.cl_channel}"

@@ -42,6 +42,27 @@ resource "google_compute_firewall" "worker-ingress-flannel" {
   target_tags = ["tectonic-workers"]
 }
 
+//gcloud compute firewall-rules create kubernetes-the-hard-way-allow-internal \
+//--allow tcp,udp,icmp \
+//--network kubernetes-the-hard-way \
+//--source-ranges 10.240.0.0/24,10.200.0.0/16
+resource "google_compute_firewall" "worker-ingress-pods" {
+  name    = "worker-ingress-pods"
+  network = "${google_compute_network.tectonic-network.name}"
+
+  allow {
+    protocol = "udp"
+  }
+  allow {
+    protocol = "tcp"
+  }
+  allow {
+    protocol = "icmp"
+  }
+  source_ranges = ["10.0.0.0/8", "10.200.0.0/16"]
+  target_tags = ["tectonic-masters", "tectonic-workers"]
+}
+
 resource "google_compute_firewall" "worker-ingress-node-exporter" {
   name    = "worker-ingress-node-exporter"
   network = "${google_compute_network.tectonic-network.name}"

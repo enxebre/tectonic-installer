@@ -1,0 +1,3 @@
+[global]
+node-tags = test-cluster-gcp-kuwit-rocks-k8s-io-role-node
+multizone = true

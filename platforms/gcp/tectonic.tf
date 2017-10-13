@@ -63,7 +63,8 @@ module "identity_certs" {
 
 module "bootkube" {
   source         = "../../modules/bootkube"
-  cloud_provider = ""
+  cloud_provider = "gce"
+
   cluster_name   = "${var.tectonic_cluster_name}"
 
   kube_apiserver_url = "https://${module.dns.kube_apiserver_fqdn}:443"
@@ -154,23 +155,23 @@ module "tectonic" {
   image_re = "${var.tectonic_image_re}"
 }
 
-module "flannel-vxlan" {
-  source = "../../modules/net/flannel-vxlan"
-
-  flannel_image     = "${var.tectonic_container_images["flannel"]}"
-  flannel_cni_image = "${var.tectonic_container_images["flannel_cni"]}"
-  cluster_cidr      = "${var.tectonic_cluster_cidr}"
-}
-
-module "calico-network-policy" {
-  source = "../../modules/net/calico-network-policy"
-
-  kube_apiserver_url = "https://${module.dns.kube_apiserver_fqdn}:443"
-  calico_image       = "${var.tectonic_container_images["calico"]}"
-  calico_cni_image   = "${var.tectonic_container_images["calico_cni"]}"
-  cluster_cidr       = "${var.tectonic_cluster_cidr}"
-  enabled            = "${var.tectonic_calico_network_policy}"
-}
+//module "flannel-vxlan" {
+//  source = "../../modules/net/flannel-vxlan"
+//
+//  flannel_image     = "${var.tectonic_container_images["flannel"]}"
+//  flannel_cni_image = "${var.tectonic_container_images["flannel_cni"]}"
+//  cluster_cidr      = "${var.tectonic_cluster_cidr}"
+//}
+//
+//module "calico-network-policy" {
+//  source = "../../modules/net/calico-network-policy"
+//
+//  kube_apiserver_url = "https://${module.dns.kube_apiserver_fqdn}:443"
+//  calico_image       = "${var.tectonic_container_images["calico"]}"
+//  calico_cni_image   = "${var.tectonic_container_images["calico_cni"]}"
+//  cluster_cidr       = "${var.tectonic_cluster_cidr}"
+//  enabled            = "${var.tectonic_calico_network_policy}"
+//}
 
 data "archive_file" "assets" {
   type       = "zip"
@@ -186,5 +187,5 @@ data "archive_file" "assets" {
   # Additionally, data sources do not support managing any lifecycle whatsoever,
   # and therefore, the archive is never deleted. To avoid cluttering the module
   # folder, we write it in the TerraForm managed hidden folder `.terraform`.
-  output_path = "./.terraform/generated_${sha1("${module.etcd_certs.id} ${module.tectonic.id} ${module.bootkube.id} ${module.flannel-vxlan.id} ${module.calico-network-policy.id}")}.zip"
+  output_path = "./.terraform/generated_${sha1("${module.etcd_certs.id} ${module.tectonic.id} ${module.bootkube.id} ")}.zip"
 }

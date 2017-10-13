@@ -4,6 +4,7 @@ data "ignition_config" "main" {
     "${var.ign_gcs_puller_id}",
     "${data.ignition_file.init_assets.id}",
     "${var.ign_installer_kubelet_env_id}",
+    "${data.ignition_file.cloud_config_m.id}",
   ]
 
   systemd = ["${compact(list(
@@ -37,5 +38,23 @@ data "ignition_file" "init_assets" {
 
   content {
     content = "${data.template_file.init_assets.rendered}"
+  }
+}
+
+data "ignition_file" "cloud_config_m" {
+  filesystem = "root"
+  path       = "/etc/kubernetes/cloud/config"
+  mode       = 0755
+
+  content {
+    content = "${data.template_file.cloud_config_m.rendered}"
+  }
+}
+
+data "template_file" "cloud_config_m" {
+  template = "${file("${path.module}/resources/config")}"
+
+  vars {
+
   }
 }
