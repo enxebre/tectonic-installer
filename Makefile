@@ -162,7 +162,7 @@ smoke-test-env-docker-image:
 	docker build -t quay.io/coreos/tectonic-smoke-test-env -f images/tectonic-smoke-test-env/Dockerfile .
 
 .PHONY: tests/smoke
-tests/smoke: bin/smoke smoke-test-env-docker-image
+tests/smoke:
 	docker run \
 	--rm \
 	-it \
@@ -171,7 +171,6 @@ tests/smoke: bin/smoke smoke-test-env-docker-image
 	-v "${TF_VAR_tectonic_license_path}":"${TF_VAR_tectonic_license_path}" \
 	-v "${TF_VAR_tectonic_pull_secret_path}":"${TF_VAR_tectonic_pull_secret_path}" \
 	-v "${HOME}/.ssh:/root/.ssh:ro" \
-	-v "${TF_VAR_tectonic_azure_ssh_key}":"${TF_VAR_tectonic_azure_ssh_key}" \
 	-e CLUSTER \
 	-e AWS_ACCESS_KEY_ID \
 	-e AWS_SECRET_ACCESS_KEY \
