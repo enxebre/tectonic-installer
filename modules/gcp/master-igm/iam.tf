@@ -1,5 +1,5 @@
 resource "google_service_account" "master-node-sa" {
-  account_id   = "${var.cluster_name}-master-node"
+  account_id   = "${var.cluster_name}-m"
   display_name = "Master node"
 }
 
