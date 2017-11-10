@@ -263,6 +263,8 @@ pipeline {
         GRAFITI_DELETER_ROLE = 'grafiti-deleter'
         TF_VAR_tectonic_container_images = "${params.hyperkube_image}"
         GOOGLE_PROJECT = "tectonic-installer"
+        GOOGLE_ACCOUNT_NAME = "tectonic-installer@tectonic-installer.iam.gserviceaccount.com"
+
       }
       steps {
         script {

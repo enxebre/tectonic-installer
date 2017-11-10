@@ -90,6 +90,9 @@ module "masters" {
   disk_type = "${var.tectonic_gcp_master_disktype}"
   disk_size = "${var.tectonic_gcp_master_disk_size}"
 
+  assets_gcs_location               = "${google_storage_bucket.assets_storage_bucket.name}/${google_storage_bucket_object.tectonic-assets.name}"
+  ign_init_assets_service_id        = "${module.ignition_masters.init_assets_service_id}"
+  ign_gcs_puller_id                 = "${module.ignition_masters.gcs_puller_id}"
   ign_k8s_node_bootstrap_service_id = "${module.ignition_masters.k8s_node_bootstrap_service_id}"
   ign_bootkube_path_unit_id         = "${module.bootkube.systemd_path_unit_id}"
   ign_bootkube_service_id           = "${module.bootkube.systemd_service_id}"
@@ -149,6 +152,7 @@ module "ignition_masters" {
   etcd_count                = "${length(data.template_file.etcd_hostname_list.*.id)}"
   etcd_initial_cluster_list = "${data.template_file.etcd_hostname_list.*.rendered}"
   etcd_tls_enabled          = "${var.tectonic_etcd_tls_enabled}"
+  assets_location           = "${google_storage_bucket.assets_storage_bucket.name}/${google_storage_bucket_object.tectonic-assets.name}"
 }
 
 module "ignition_workers" {

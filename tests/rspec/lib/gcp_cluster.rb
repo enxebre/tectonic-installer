@@ -2,9 +2,14 @@
 
 require 'cluster'
 require 'env_var'
+require 'gcloud_helper'
 
 # GCPCluster represents a k8s cluster on CGP cloud provider
 class GcpCluster < Cluster
+  def initialize(tfvars_file)
+    @gcloud = GcloudHelper.new
+    super(tfvars_file)
+  end
   def env_variables
     variables = super
     variables['PLATFORM'] = 'gcp'
@@ -24,19 +29,19 @@ class GcpCluster < Cluster
       GCLOUD_KEYFILE_JSON
       GOOGLE_APPLICATION_CREDENTIALS
     ]
-    EnvVar.contains_any?(credential_vars)
+    project_vars = %w[
+      GOOGLE_ACCOUNT_NAME
+      GOOGLE_PROJECT
+    ]
+    EnvVar.contains_any?(credential_vars) and EnvVar.set?(project_vars)
   end
 
   def master_ip_addresses
-    ip_addresses = []
-    Dir.chdir(@build_path) do
-      ip_address = `echo module.network.ssh_master_ip | terraform console ../../platforms/gcp`.chomp
-      if ip_address.empty?
-        raise 'should get the master_ip_address to use in the tests.'
-      end
-      ip_addresses.push(ip_address)
-      ip_addresses
-    end
+    gcloud_command = "compute instances list \
+--format=\"value(networkInterfaces[0].accessConfigs[0].natIP)\" \
+--filter=\"name~${CLUSTER}.*master.*\""
+    ip_addresses = @gcloud.run(gcloud_command).split("\n")
+    ip_addresses
   end
 
   def master_ip_address
