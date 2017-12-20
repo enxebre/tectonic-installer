@@ -1,0 +1,117 @@
+variable "base_domain" {
+  type = "string"
+}
+
+variable "cluster_id" {
+  type = "string"
+}
+
+variable "cluster_name" {
+  type = "string"
+}
+
+variable "container_linux_channel" {
+  type = "string"
+}
+
+variable "container_linux_version" {
+  type = "string"
+}
+
+variable "instance_count" {
+  default = "3"
+}
+
+variable "ssh_key" {
+  type = "string"
+}
+
+variable "subnets" {
+  type = "list"
+}
+
+variable "external_endpoints" {
+  type = "list"
+}
+
+variable "container_image" {
+  type = "string"
+}
+
+variable "ec2_type" {
+  type = "string"
+}
+
+variable "extra_tags" {
+  description = "Extra AWS tags to be applied to created resources."
+  type        = "map"
+  default     = {}
+}
+
+variable "root_volume_type" {
+  type        = "string"
+  description = "The type of volume for the root block device."
+}
+
+variable "root_volume_size" {
+  type        = "string"
+  description = "The size of the volume in gigabytes for the root block device."
+}
+
+variable "root_volume_iops" {
+  type        = "string"
+  default     = "100"
+  description = "The amount of provisioned IOPS for the root block device."
+}
+
+variable "sg_ids" {
+  type        = "list"
+  description = "The security group IDs to be applied."
+}
+
+variable "tls_enabled" {
+  default = false
+}
+
+variable "ign_etcd_dropin_id_list" {
+  type = "list"
+}
+
+variable "s3_bucket" {
+  type = "string"
+}
+
+variable "dns_server_ip" {
+  type    = "string"
+  default = ""
+}
+
+
+variable "etcd_ca_cert_pem" {
+  type        = "string"
+  description = "The etcd kube CA certificate in PEM format."
+}
+
+variable "etcd_client_key_pem" {
+  default = ""
+}
+
+variable "etcd_client_crt_pem" {
+  default = ""
+}
+
+variable "etcd_server_key_pem" {
+  default = ""
+}
+
+variable "etcd_server_crt_pem" {
+  default = ""
+}
+
+variable "etcd_peer_key_pem" {
+  default = ""
+}
+
+variable "etcd_peer_crt_pem" {
+  default = ""
+}

@@ -63,7 +63,7 @@ module "vpc" {
 }
 
 module "etcd" {
-  source = "../../modules/aws/etcd"
+  source = "../../modules/govcloud/etcd"
 
   base_domain             = "${var.tectonic_base_domain}"
   cluster_id              = "${module.tectonic.cluster_id}"
@@ -74,7 +74,7 @@ module "etcd" {
   ec2_type                = "${var.tectonic_govcloud_etcd_ec2_type}"
   external_endpoints      = "${compact(var.tectonic_etcd_servers)}"
   extra_tags              = "${var.tectonic_govcloud_extra_tags}"
-  ign_etcd_crt_id_list    = "${module.ignition_masters.etcd_crt_id_list}"
+
   ign_etcd_dropin_id_list = "${module.ignition_masters.etcd_dropin_id_list}"
   instance_count          = "${length(data.template_file.etcd_hostname_list.*.id)}"
   root_volume_iops        = "${var.tectonic_govcloud_etcd_root_volume_iops}"
@@ -86,6 +86,14 @@ module "etcd" {
   subnets                 = "${module.vpc.worker_subnet_ids}"
   tls_enabled             = "${var.tectonic_etcd_tls_enabled}"
   dns_server_ip           = "${var.tectonic_govcloud_dns_server_ip}"
+
+  etcd_ca_cert_pem          = "${module.etcd_certs.etcd_ca_crt_pem}"
+  etcd_client_crt_pem       = "${module.etcd_certs.etcd_client_crt_pem}"
+  etcd_client_key_pem       = "${module.etcd_certs.etcd_client_key_pem}"
+  etcd_peer_crt_pem         = "${module.etcd_certs.etcd_peer_crt_pem}"
+  etcd_peer_key_pem         = "${module.etcd_certs.etcd_peer_key_pem}"
+  etcd_server_crt_pem       = "${module.etcd_certs.etcd_server_crt_pem}"
+  etcd_server_key_pem       = "${module.etcd_certs.etcd_server_key_pem}"
 }
 
 module "ignition_masters" {
