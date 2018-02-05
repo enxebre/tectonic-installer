@@ -1,8 +1,6 @@
 package workflow
 
 import (
-	"log"
-
 	"github.com/coreos/tectonic-installer/installer/pkg/config"
 )
 
@@ -39,7 +37,7 @@ func (w simpleWorkflow) Execute() error {
 	for _, step := range w.steps {
 		err = step(&w.metadata)
 		if err != nil {
-			log.Fatal(err) // TODO: actually do proper error handling
+			return err
 		}
 	}
 	return nil
