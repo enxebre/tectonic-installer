@@ -28,6 +28,12 @@ func NewInstallWorkflow(configFile string) Workflow {
 
 	cluster := config.Clusters[0]
 
+	//clusterName, err := tectonic.ClusterNameFromConfig(configFile) // TODO @spangenberg: re-implement with config object
+	//if err != nil {
+	//	log.Fatalf("%s is not a valid config file", configFile)
+	//}
+	clusterName := "cluster-aws"
+
 	// TODO: Discrimitate by config provider. if platform is aws:
 	return simpleWorkflow{
 		metadata: metadata{
@@ -36,9 +42,7 @@ func NewInstallWorkflow(configFile string) Workflow {
 		},
 		steps: []Step{
 			terraformPrepareStep,
-			tlsStep,
 			assetsStep,
-			ignitionStep,
 			bootstrapStep,
 			joiningStep,
 		},
@@ -67,7 +71,52 @@ func tectonicGenerateTerraformVariables(m *metadata) error {
 	return tectonic.GenerateTerraformVars(m.Cluster, configFilePath)
 }
 
-func tectonicPrepareStep(m *metadata) error {
+func NewAssetsWorkflow(configFile string) Workflow {
+	clusterName := "cluster-aws"
+	// TODO: Discrimitate by config provider. if platform is aws:
+	return simpleWorkflow{
+		metadata: metadata{
+			clusterName: clusterName,
+			configFile:  configFile,
+		},
+		steps: []Step{
+			terraformPrepareStep,
+			assetsStep,
+		},
+	}
+}
+
+func NewBootstrapWorkflow(configFile string) Workflow {
+	clusterName := "cluster-aws"
+	// TODO: Discrimitate by config provider. if platform is aws:
+	return simpleWorkflow{
+		metadata: metadata{
+			clusterName: clusterName,
+			configFile:  configFile,
+		},
+		steps: []Step{
+			terraformPrepareStep,
+			bootstrapStep,
+		},
+	}
+}
+
+func NewJoinWorkflow(configFile string) Workflow {
+	clusterName := "cluster-aws"
+	// TODO: Discrimitate by config provider. if platform is aws:
+	return simpleWorkflow{
+		metadata: metadata{
+			clusterName: clusterName,
+			configFile:  configFile,
+		},
+		steps: []Step{
+			terraformPrepareStep,
+			joiningStep,
+		},
+	}
+}
+
+func terraformPrepareStep(m *metadata) error {
 	if m.statePath == "" {
 		m.statePath = tectonic.NewBuildLocation(m.Cluster.Name)
 	}
@@ -109,27 +158,9 @@ func tectonicPrepareStep(m *metadata) error {
 //	return nil
 //}
 
-func tlsStep(m *metadata) error {
-	log.Printf("Installation is running...")
-	err := runStep(m.statePath, "tls")
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func assetsStep(m *metadata) error {
 	log.Printf("Installation is running...")
 	err := runStep(m.statePath, "assets")
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func ignitionStep(m *metadata) error {
-	log.Printf("Installation is running...")
-	err := runStep(m.statePath, "ignition")
 	if err != nil {
 		return err
 	}
@@ -183,6 +214,7 @@ func waitForNcg(m *metadata) error {
 			log.Printf("Waiting for NCG to be running, this might take a while... %v", err)
 		}
 		log.Printf("Installation is running...")
+		log.Printf("Waiting for NCG to be running, this might take a while... %v")
 		if ds.Status.NumberReady >= 1 {
 			break
 		}
@@ -206,6 +238,10 @@ func importAutoScalingGroup(m *metadata) error {
 	bp := m.statePath
 	log.Printf("Installation is running...")
 	err := runTfCommand(bp, "import", "-state=joining.tfstate", "-config="+tectonic.FindTemplatesForStep("joining"), "aws_autoscaling_group.masters", m.clusterName+"-masters")
+	if err != nil {
+		return err
+	}
+	err = runTfCommand(bp, "import", "-state=joining.tfstate", "-config="+tectonic.FindTemplatesForStep("joining"), "aws_autoscaling_group.workers", m.clusterName+"-workers")
 	if err != nil {
 		return err
 	}
