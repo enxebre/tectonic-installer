@@ -28,9 +28,9 @@ func NewDestroyWorkflow(buildPath string) Workflow {
 			terraformPrepareStep,
 			joiningDestroyStep,
 			bootstrapDestroyStep,
-			ignitionDestroyStep,
+			//ignitionDestroyStep,
 			assetsDestroyStep,
-			tlsDestroyStep,
+			//tlsDestroyStep,
 		},
 	}
 
