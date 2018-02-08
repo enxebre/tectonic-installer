@@ -104,14 +104,14 @@ data "ignition_config" "masters" {
 
 resource "local_file" "ncg" {
   depends_on = ["module.bootkube"]
-  content  = "${data.template_file.ncg.rendered}"
-  filename = "./generated/manifests/ncg.yaml"
+  content    = "${data.template_file.ncg.rendered}"
+  filename   = "./generated/manifests/ncg.yaml"
 }
 
 resource "local_file" "ncg_config" {
   depends_on = ["module.bootkube"]
-  content  = "${data.template_file.ncg_config.rendered}"
-  filename = "./generated/manifests/ncg-config.yaml"
+  content    = "${data.template_file.ncg_config.rendered}"
+  filename   = "./generated/manifests/ncg-config.yaml"
 }
 
 data "template_file" "ncg" {
@@ -120,9 +120,11 @@ data "template_file" "ncg" {
 
 data "template_file" "ncg_config" {
   template = "${file("${path.module}/resources/ncg/ncg-config.yaml")}"
+
   vars {
-    ncg_config_worker   = "${jsonencode(data.ignition_config.workers.rendered)}"
-    ncg_config_master   = "${jsonencode(data.ignition_config.masters.rendered)}"
+    # need indent here https://github.com/hashicorp/terraform/issues/16775
+    ncg_config_worker   = "${indent(2, data.ignition_config.workers.rendered)}"
+    ncg_config_master   = "${indent(2, data.ignition_config.masters.rendered)}"
     kube_dns_service_ip = "${cidrhost(var.tectonic_service_cidr, 10)}"
   }
 }
