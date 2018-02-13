@@ -19,81 +19,54 @@ func NewDestroyWorkflow(buildPath string) Workflow {
 		log.Fatalf("%v encountered while validating build location.", err)
 	}
 
-	// TODO: Discrimitate by config provider. if platform is aws:
-	return simpleWorkflow{
-		metadata: metadata{
-			statePath: buildPath,
-		},
-		steps: []Step{
-			terraformPrepareStep,
-			joiningDestroyStep,
-			bootstrapDestroyStep,
-			//ignitionDestroyStep,
-			assetsDestroyStep,
-			//tlsDestroyStep,
-		},
-	}
+	// TODO: get this dynamically once we move to cluster config
+	platform := "aws"
 
-	//return simpleWorkflow{
-	//	metadata: metadata{
-	//		statePath: buildPath,
-	//	},
-	//	steps: []Step{
-	//		terraformPrepareStep,
-	//		terraformInitStep,
-	//		terraformDestroyStep,
-	//	},
-	//}
+	if platform == "aws" {
+		return simpleWorkflow{
+			metadata: metadata{
+				statePath: buildPath,
+			},
+			steps: []Step{
+				terraformPrepareStep,
+				joiningDestroyStep,
+				bootstrapDestroyStep,
+				assetsDestroyStep,
+			},
+		}
+	} else {
+		return simpleWorkflow{
+			metadata: metadata{
+				statePath: buildPath,
+			},
+			steps: []Step{
+				terraformPrepareStep,
+				terraformInitStep,
+				terraformDestroyStep,
+			},
+		}
+	}
 }
 
-//func terraformDestroyStep(m *metadata) error {
-//	if m.statePath == "" {
-//		log.Fatalf("Invalid build location - cannot destroy.")
-//	}
-//	log.Printf("Destroying cluster from %s...", m.statePath)
-//	err := tfDestroy(m.statePath, "state", tectonic.FindTemplatesForType("aws"))
-//	if err != nil {
-//		return err
-//	}
-//	return nil
-//}
+func terraformDestroyStep(m *metadata) error {
+	if m.statePath == "" {
+		log.Fatalf("Invalid build location - cannot destroy.")
+	}
+	log.Printf("Destroying cluster from %s...", m.statePath)
+	return tfDestroy(m.statePath, "state", tectonic.FindTemplatesForType(m.platform))
+}
 
 func joiningDestroyStep(m *metadata) error {
-	err := tfDestroy(m.statePath, "joining", tectonic.FindTemplatesForStep("joining"))
-	if err != nil {
-		return err
-	}
-	return nil
+	log.Printf("Destroying cluster from %s...", m.statePath)
+	return tfDestroy(m.statePath, "joining", tectonic.FindTemplatesForStep("joining"))
 }
 
 func bootstrapDestroyStep(m *metadata) error {
-	err := tfDestroy(m.statePath, "bootstrap", tectonic.FindTemplatesForStep("bootstrap"))
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func ignitionDestroyStep(m *metadata) error {
-	err := tfDestroy(m.statePath, "ignition", tectonic.FindTemplatesForStep("ignition"))
-	if err != nil {
-		return err
-	}
-	return nil
+	log.Printf("Destroying cluster from %s...", m.statePath)
+	return tfDestroy(m.statePath, "bootstrap", tectonic.FindTemplatesForStep("bootstrap"))
 }
 
 func assetsDestroyStep(m *metadata) error {
-	err := tfDestroy(m.statePath, "assets", tectonic.FindTemplatesForStep("assets"))
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func tlsDestroyStep(m *metadata) error {
-	err := tfDestroy(m.statePath, "tls", tectonic.FindTemplatesForStep("tls"))
-	if err != nil {
-		return err
-	}
-	return nil
+	log.Printf("Destroying cluster from %s...", m.statePath)
+	return tfDestroy(m.statePath, "assets", tectonic.FindTemplatesForStep("assets"))
 }

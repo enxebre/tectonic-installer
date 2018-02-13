@@ -19,25 +19,13 @@ func runTfCommand(buildPath string, args ...string) error {
 }
 
 func tfInit(buildPath string, codePath string) error {
-	err := runTfCommand(buildPath, "init", codePath)
-	if err != nil {
-		return err
-	}
-	return nil
+	return runTfCommand(buildPath, "init", codePath)
 }
 
 func tfDestroy(buildPath string, state string, codePath string) error {
-	err := runTfCommand(buildPath, "destroy", "-force", "-state="+state+".tfstate", codePath)
-	if err != nil {
-		return err
-	}
-	return nil
+	return runTfCommand(buildPath, "destroy", "-force", "-state="+state+".tfstate", codePath)
 }
 
 func tfApply(buildPath string, state string, codePath string) error {
-	err := runTfCommand(buildPath, "apply", "-state="+state+".tfstate", codePath)
-	if err != nil {
-		return err
-	}
-	return nil
+	return runTfCommand(buildPath, "apply", "-state="+state+".tfstate", codePath)
 }

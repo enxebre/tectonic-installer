@@ -30,11 +30,11 @@ bin/windows/installer.exe: $(GO_FILES) assets/bindata.go
 	GOOS=windows go build -o bin/windows/installer.exe -ldflags $(LD_FLAGS) $(REPO)/cmd/installer
 
 bin/%/installer: $(GO_FILES) assets/bindata.go
-	GOOS=$* go build -o bin/$*/installer -ldflags $(LD_FLAGS) $(REPO)/cmd/installer
+	GOOS=$* go build -o bin/$*/tectonic -ldflags $(LD_FLAGS) $(REPO)/cmd/tectonic
 
 .PHONY: backend
 backend: assets/bindata.go
-	GOOS=$(OS) go build -o bin/$(OS)/installer -ldflags $(LD_FLAGS) $(REPO)/cmd/installer
+	GOOS=$(OS) go build -o bin/$(OS)/installer -ldflags $(LD_FLAGS) $(REPO)/cmd/tectonic
 
 .PHONY: frontend
 frontend: assets/frontend/scripts/app-bundle.js
@@ -43,10 +43,10 @@ assets/bindata.go: assets/frontend/scripts/app-bundle.js bin/go-bindata $(shell 
 	./bin/go-bindata -pkg assets -o assets/bindata.go -ignore=bindata.go -ignore=doc.go -ignore=assets.go -prefix assets assets/...
 
 assets/frontend/scripts/app-bundle.js: frontend/node_modules frontend/*.jsx frontend/*.js $(call find,frontend/components,-name '*.jsx') $(call find,frontend/node_modules)
-	cd frontend && yarn run build
+	ls
 
 frontend/node_modules: frontend/package.json frontend/yarn.lock
-	cd frontend && yarn install --quiet > /dev/null
+	ls
 
 .PHONY: lint
 lint: build bin/golint shellcheck
