@@ -1,0 +1,70 @@
+apiVersion: apps/v1beta2
+kind: DaemonSet
+metadata:
+  name: tectonic-node-controller
+  namespace: tectonic-system
+  labels:
+    k8s-app: tectonic-node-controller
+    managed-by-channel-operator: "true"
+spec:
+  selector:
+    matchLabels:
+      k8s-app: tectonic-node-controller
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        k8s-app: tectonic-node-controller
+        tectonic-app-version-name: tectonic-network
+    spec:
+      containers:
+      - name: tectonic-node-controller
+        image: ${tnc_bootstrap_image}
+        command:
+        - /bootstrap
+        - --config=/etc/cluster-config
+        - --port=45900
+        - --cert=/opt/tectonic/tls/root-ca.crt
+        - --key=/opt/tectonic/tls/root-ca.key
+        resources:
+          limits:
+            cpu: 20m
+            memory: 50Mi
+          requests:
+            cpu: 20m
+            memory: 50Mi
+        volumeMounts:
+        - name: cluster-config
+          mountPath: /etc/cluster-config
+        - name: ssl-certs
+          mountPath: /opt/tectonic/tls
+      hostNetwork: true
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: coreos-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      volumes:
+      - name: cluster-config
+        configMap:
+          name: cluster-config-v1
+          items:
+          - key: tnc-config
+            path: tnc-config
+      - name: ssl-certs
+        hostPath:
+          path: /opt/tectonic/tls
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
