@@ -30,10 +30,10 @@ variable "etcd_count" {
   type        = "string"
 }
 
-variable "etcd_ip_addresses" {
-  description = "List of string IPs for etcd nodes"
-  type        = "list"
-}
+//variable "etcd_ip_addresses" {
+//  description = "List of string IPs for etcd nodes"
+//  type        = "list"
+//}
 
 variable "master_ip_addresses" {
   description = "List of string IPs for masters"

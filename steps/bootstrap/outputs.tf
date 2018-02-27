@@ -1,3 +1,16 @@
+# Etcd
+output "container_linux_version" {
+  value = "${module.container_linux.version}"
+}
+
+output "etcd_count" {
+  value = "${length(data.template_file.etcd_hostname_list.*.id)}"
+}
+
+output "etcd_sg" {
+  value = "${list(module.vpc.etcd_sg_id)}"
+}
+
 # Masters
 output "aws_launch_configuration_masters" {
   value = "${module.masters.aws_launch_configuration}"

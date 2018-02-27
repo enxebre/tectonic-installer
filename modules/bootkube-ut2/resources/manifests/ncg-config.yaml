@@ -46,3 +46,23 @@ data:
     }
   master.clc: |
     ${ncg_config_master}
+  etcd.group: |
+    {
+      "id": "etcd",
+      "name": "Etcd Profile",
+      "profile": "etcd",
+      "selector": {
+        "profile": "etcd"
+      },
+      "metadata": {
+        "k8s_dns_service_ip": "${kube_dns_service_ip}"
+      }
+    }
+  etcd.profile: |
+    {
+      "id": "etcd",
+      "name": "Etcd Profile",
+      "clc_id": "etcd.ign"
+    }
+  etcd.clc: |
+    ${ncg_config_etcd}

@@ -74,9 +74,9 @@ variable "sg_ids" {
   description = "The security group IDs to be applied."
 }
 
-variable "s3_bucket" {
-  type = "string"
-}
+//variable "s3_bucket" {
+//  type = "string"
+//}
 
 variable "etcd_iam_role" {
   type        = "string"

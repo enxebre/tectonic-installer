@@ -1,0 +1,11 @@
+{
+  "id": "master",
+  "name": "Master Profile",
+  "profile": "master",
+  "selector": {
+    "profile": "master"
+  },
+  "metadata": {
+    "k8s_dns_service_ip": "${kube_dns_service_ip}"
+  }
+}

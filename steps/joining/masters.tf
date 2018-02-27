@@ -10,6 +10,7 @@ provider "aws" {
 }
 
 resource "aws_autoscaling_group" "masters" {
+  depends_on           = ["aws_route53_record.etcd_a_nodes"]
   name                 = "${var.tectonic_cluster_name}-masters"
   desired_capacity     = "${var.tectonic_master_count}"
   max_size             = "${var.tectonic_master_count * 3}"

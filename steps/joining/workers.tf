@@ -1,4 +1,5 @@
 resource "aws_autoscaling_group" "workers" {
+  depends_on           = ["aws_route53_record.etcd_a_nodes"]
   name                 = "${var.tectonic_cluster_name}-workers"
   desired_capacity     = "${var.tectonic_worker_count}"
   max_size             = "${var.tectonic_worker_count * 3}"

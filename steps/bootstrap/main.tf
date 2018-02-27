@@ -72,29 +72,29 @@ module "vpc" {
   )}"
 }
 
-module "etcd" {
-  source = "../../modules/aws/etcd"
-
-  base_domain             = "${var.tectonic_base_domain}"
-  cluster_id              = "${local.cluster_id}"
-  cluster_name            = "${var.tectonic_cluster_name}"
-  container_image         = "${var.tectonic_container_images["etcd"]}"
-  container_linux_channel = "${var.tectonic_container_linux_channel}"
-  container_linux_version = "${module.container_linux.version}"
-  ec2_type                = "${var.tectonic_aws_etcd_ec2_type}"
-  external_endpoints      = "${compact(var.tectonic_etcd_servers)}"
-  extra_tags              = "${var.tectonic_aws_extra_tags}"
-  instance_count          = "${length(data.template_file.etcd_hostname_list.*.id)}"
-  root_volume_iops        = "${var.tectonic_aws_etcd_root_volume_iops}"
-  root_volume_size        = "${var.tectonic_aws_etcd_root_volume_size}"
-  root_volume_type        = "${var.tectonic_aws_etcd_root_volume_type}"
-  s3_bucket               = "${aws_s3_bucket.tectonic.bucket}"
-  sg_ids                  = "${concat(var.tectonic_aws_etcd_extra_sg_ids, list(module.vpc.etcd_sg_id))}"
-  ssh_key                 = "${var.tectonic_aws_ssh_key}"
-  subnets                 = "${module.vpc.worker_subnet_ids}"
-  etcd_iam_role           = "${var.tectonic_aws_etcd_iam_role_name}"
-  ec2_ami                 = "${var.tectonic_aws_ec2_ami_override}"
-}
+//module "etcd" {
+//  source = "../../modules/aws/etcd"
+//
+//  base_domain             = "${var.tectonic_base_domain}"
+//  cluster_id              = "${local.cluster_id}"
+//  cluster_name            = "${var.tectonic_cluster_name}"
+//  container_image         = "${var.tectonic_container_images["etcd"]}"
+//  container_linux_channel = "${var.tectonic_container_linux_channel}"
+//  container_linux_version = "${module.container_linux.version}"
+//  ec2_type                = "${var.tectonic_aws_etcd_ec2_type}"
+//  external_endpoints      = "${compact(var.tectonic_etcd_servers)}"
+//  extra_tags              = "${var.tectonic_aws_extra_tags}"
+//  instance_count          = "${length(data.template_file.etcd_hostname_list.*.id)}"
+//  root_volume_iops        = "${var.tectonic_aws_etcd_root_volume_iops}"
+//  root_volume_size        = "${var.tectonic_aws_etcd_root_volume_size}"
+//  root_volume_type        = "${var.tectonic_aws_etcd_root_volume_type}"
+//  s3_bucket               = "${aws_s3_bucket.tectonic.bucket}"
+//  sg_ids                  = "${concat(var.tectonic_aws_etcd_extra_sg_ids, list(module.vpc.etcd_sg_id))}"
+//  ssh_key                 = "${var.tectonic_aws_ssh_key}"
+//  subnets                 = "${module.vpc.worker_subnet_ids}"
+//  etcd_iam_role           = "${var.tectonic_aws_etcd_iam_role_name}"
+//  ec2_ami                 = "${var.tectonic_aws_ec2_ami_override}"
+//}
 
 module "masters" {
   source = "../../modules/aws/master-asg"
@@ -151,20 +151,21 @@ module "workers" {
 module "dns" {
   source = "../../modules/dns/route53"
 
-  api_external_elb_dns_name      = "${module.vpc.aws_api_external_dns_name}"
-  api_external_elb_zone_id       = "${module.vpc.aws_elb_api_external_zone_id}"
-  api_internal_elb_dns_name      = "${module.vpc.aws_api_internal_dns_name}"
-  api_internal_elb_zone_id       = "${module.vpc.aws_elb_api_internal_zone_id}"
-  api_ip_addresses               = "${module.vpc.aws_lbs}"
-  base_domain                    = "${var.tectonic_base_domain}"
-  cluster_id                     = "${local.cluster_id}"
-  cluster_name                   = "${var.tectonic_cluster_name}"
-  console_elb_dns_name           = "${module.vpc.aws_console_dns_name}"
-  console_elb_zone_id            = "${module.vpc.aws_elb_console_zone_id}"
-  custom_dns_name                = "${var.tectonic_dns_name}"
-  elb_alias_enabled              = true
-  etcd_count                     = "${length(data.template_file.etcd_hostname_list.*.id)}"
-  etcd_ip_addresses              = "${module.etcd.ip_addresses}"
+  api_external_elb_dns_name = "${module.vpc.aws_api_external_dns_name}"
+  api_external_elb_zone_id  = "${module.vpc.aws_elb_api_external_zone_id}"
+  api_internal_elb_dns_name = "${module.vpc.aws_api_internal_dns_name}"
+  api_internal_elb_zone_id  = "${module.vpc.aws_elb_api_internal_zone_id}"
+  api_ip_addresses          = "${module.vpc.aws_lbs}"
+  base_domain               = "${var.tectonic_base_domain}"
+  cluster_id                = "${local.cluster_id}"
+  cluster_name              = "${var.tectonic_cluster_name}"
+  console_elb_dns_name      = "${module.vpc.aws_console_dns_name}"
+  console_elb_zone_id       = "${module.vpc.aws_elb_console_zone_id}"
+  custom_dns_name           = "${var.tectonic_dns_name}"
+  elb_alias_enabled         = true
+  etcd_count                = "${length(data.template_file.etcd_hostname_list.*.id)}"
+
+  //  etcd_ip_addresses              = "${module.etcd.ip_addresses}"
   external_endpoints             = ["${compact(var.tectonic_etcd_servers)}"]
   master_count                   = "${var.tectonic_master_count}"
   tectonic_external_private_zone = "${join("", aws_route53_zone.tectonic_int.*.zone_id)}"

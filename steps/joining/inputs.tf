@@ -8,6 +8,9 @@ data "terraform_remote_state" "bootstrap" {
 }
 
 locals {
+  etcd_count                       = "${data.terraform_remote_state.bootstrap.etcd_count}"
+  etcd_sg                          = "${data.terraform_remote_state.bootstrap.etcd_sg}"
+  container_linux_version          = "${data.terraform_remote_state.bootstrap.container_linux_version}"
   aws_launch_configuration_masters = "${data.terraform_remote_state.bootstrap.aws_launch_configuration_masters}"
   subnet_ids_masters               = "${data.terraform_remote_state.bootstrap.subnet_ids_masters}"
   aws_lbs_masters                  = "${data.terraform_remote_state.bootstrap.aws_lbs_masters}"

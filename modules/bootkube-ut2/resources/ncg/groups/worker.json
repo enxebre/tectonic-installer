@@ -1,0 +1,11 @@
+{
+  "id": "worker",
+  "name": "Worker Profile",
+  "profile": "worker",
+  "selector": {
+    "profile": "worker"
+  },
+  "metadata": {
+    "k8s_dns_service_ip": "${kube_dns_service_ip}"
+  }
+}

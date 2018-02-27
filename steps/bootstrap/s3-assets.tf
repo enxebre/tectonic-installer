@@ -74,18 +74,19 @@ resource "aws_s3_bucket_object" "ignition_bootstrap" {
     ), var.tectonic_aws_extra_tags)}"
 }
 
-resource "aws_s3_bucket_object" "ignition_etcd" {
-  count   = "${length(data.template_file.etcd_hostname_list.*.id)}"
-  bucket  = "${aws_s3_bucket.tectonic.bucket}"
-  key     = "ignition_etcd_${count.index}.json"
-  content = "${local.ignition_etcd[count.index]}"
-  acl     = "private"
+//resource "aws_s3_bucket_object" "ignition_etcd" {
+//  count   = "${length(data.template_file.etcd_hostname_list.*.id)}"
+//  bucket  = "${aws_s3_bucket.tectonic.bucket}"
+//  key     = "ignition_etcd_${count.index}.json"
+//  content = "${local.ignition_etcd[count.index]}"
+//  acl     = "private"
+//
+//  server_side_encryption = "AES256"
+//
+//  tags = "${merge(map(
+//      "Name", "${var.tectonic_cluster_name}-ignition-etcd-${count.index}",
+//      "KubernetesCluster", "${var.tectonic_cluster_name}",
+//      "tectonicClusterID", "${local.cluster_id}"
+//    ), var.tectonic_aws_extra_tags)}"
+//}
 
-  server_side_encryption = "AES256"
-
-  tags = "${merge(map(
-      "Name", "${var.tectonic_cluster_name}-ignition-etcd-${count.index}",
-      "KubernetesCluster", "${var.tectonic_cluster_name}",
-      "tectonicClusterID", "${local.cluster_id}"
-    ), var.tectonic_aws_extra_tags)}"
-}

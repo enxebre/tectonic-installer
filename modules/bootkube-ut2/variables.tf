@@ -187,3 +187,8 @@ variable "ncg_config_master" {
   description = "configures the network to be used in the cluster"
   type        = "string"
 }
+
+variable "ncg_config_etcd" {
+  description = "configures the network to be used in the cluster"
+  type        = "string"
+}

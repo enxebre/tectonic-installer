@@ -68,6 +68,7 @@ module "bootkube" {
   # need indent here https://github.com/hashicorp/terraform/issues/16775
   ncg_config_worker = "${indent(2, data.ignition_config.workers.rendered)}"
   ncg_config_master = "${indent(2, data.ignition_config.masters.rendered)}"
+  ncg_config_etcd   = "${indent(2, data.ignition_config.etcd.rendered)}"
 
   etcd_endpoints = "${data.template_file.etcd_hostname_list.*.rendered}"
   master_count   = "${var.tectonic_master_count}"
