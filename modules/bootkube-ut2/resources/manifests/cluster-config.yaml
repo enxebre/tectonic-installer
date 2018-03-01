@@ -14,23 +14,23 @@ data:
     calicoConfig:
       mtu: ${calico_mtu}
   tnc-config: |
-    HTTPProxy: "${http_proxy}"
-    HTTPSProxy: "${https_proxy}"
-    NoProxy: "${no_proxy}"
-    KubeletImageUrl: "${kubelet_image_url}"
-    KubeletImageTag: "${kubelet_image_tag}"
-    IscsiEnabled: "${iscsi_enabled}"
-    KubeconfigFetchCmd: "${kubeconfig_fetch_cmd}"
-    TectonicTorcxImageURL: "${tectonic_torcx_image_url}"
-    TectonicTorcxImageTag: "${tectonic_torcx_image_tag}"
-    BootstrapUpgradeCl: "${bootstrap_upgrade_cl}"
-    TorcxStoreULL: "${torcx_store_url}"
-    TorcxSkipSetup: "${torcx_skip_setup}"
-    NodeLabel: "${node_label}"
-    NodeTaintsParam: "${node_taints_param}"
-    ClusterDNSIP: "${cluster_dns_ip}"
-    CloudProvider: "${cloud_provider}"
-    CloudProviderConfig: "${cloud_provider_config}"
-    DebugConfig: "${debug_config}"
-    ClusterName: "${cluster_name}"
+    httpProxy: ${http_proxy}
+    httpsProxy: ${https_proxy}
+    noProxy: ${no_proxy}
+    kubeletImageUrl: ${kubelet_image_url}
+    kubeletImageTag: ${kubelet_image_tag}
+    iscsiEnabled: ${iscsi_enabled}
+    kubeconfigFetchCmd: ${kubeconfig_fetch_cmd}
+    tectonicTorcxImageURL: ${tectonic_torcx_image_url}
+    tectonicTorcxImageTag: ${tectonic_torcx_image_tag}
+    bootstrapUpgradeCl: ${bootstrap_upgrade_cl}
+    torcxStoreULL: ${torcx_store_url}
+    torcxSkipSetup: ${torcx_skip_setup}
+    nodeLabel: ${node_label}
+    nodeTaintsParam: ${node_taints_param}
+    clusterDNSIP: ${cluster_dns_ip}
+    cloudProvider: ${cloud_provider}
+    cloudProviderConfig: ${cloud_provider_config}
+    debugConfig: ${debug_config}"
+    clusterName: ${cluster_name}"
 
