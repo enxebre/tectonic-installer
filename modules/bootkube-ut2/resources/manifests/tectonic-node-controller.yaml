@@ -26,8 +26,7 @@ spec:
         args:
         - --config=/etc/cluster-config/tnc-config
         - --port=45900
-        - --cert=/opt/tectonic/tls/ca.crt
-        - --key=/opt/tectonic/tls/ca.key
+        - --debug
         resources:
           limits:
             cpu: 20m
