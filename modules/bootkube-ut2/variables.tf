@@ -178,16 +178,6 @@ variable "tectonic_networking" {
   type        = "string"
 }
 
-variable "ncg_config_worker" {
-  description = "configures the network to be used in the cluster"
-  type        = "string"
-}
-
-variable "ncg_config_master" {
-  description = "configures the network to be used in the cluster"
-  type        = "string"
-}
-
 variable "http_proxy" {
   type        = "string"
   description = "HTTP proxy address."
@@ -255,4 +245,3 @@ EOF
 
   type = "string"
 }
-
