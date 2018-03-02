@@ -2,7 +2,7 @@ apiVersion: apps/v1beta2
 kind: DaemonSet
 metadata:
   name: tectonic-node-controller
-  namespace: tectonic-system
+  namespace: kube-system
   labels:
     k8s-app: tectonic-node-controller
     managed-by-channel-operator: "true"
@@ -23,12 +23,11 @@ spec:
       containers:
       - name: tectonic-node-controller
         image: ${tnc_bootstrap_image}
-        command:
-        - /bootstrap
-        - --config=/etc/cluster-config
+        args:
+        - --config=/etc/cluster-config/tnc-config
         - --port=45900
-        - --cert=/opt/tectonic/tls/root-ca.crt
-        - --key=/opt/tectonic/tls/root-ca.key
+        - --cert=/opt/tectonic/tls/ca.crt
+        - --key=/opt/tectonic/tls/ca.key
         resources:
           limits:
             cpu: 20m
@@ -51,7 +50,7 @@ spec:
       volumes:
       - name: cluster-config
         configMap:
-          name: cluster-config-v1
+          name: tectonic-node-controller-config-v1
           items:
           - key: tnc-config
             path: tnc-config

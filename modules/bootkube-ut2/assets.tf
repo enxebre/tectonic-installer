@@ -40,8 +40,6 @@ resource "template_dir" "bootkube" {
     pull_secret                    = "${base64encode(file(var.pull_secret_path))}"
     serviceaccount_pub             = "${base64encode(tls_private_key.service_account.public_key_pem)}"
     serviceaccount_key             = "${base64encode(tls_private_key.service_account.private_key_pem)}"
-    ncg_config_worker              = "${var.ncg_config_worker}"
-    ncg_config_master              = "${var.ncg_config_master}"
     kube_dns_service_ip            = "${cidrhost(var.service_cidr, 10)}"
 
     etcd_ca_cert     = "${base64encode(var.etcd_ca_cert_pem)}"
@@ -170,4 +168,3 @@ data "ignition_systemd_unit" "bootkube_path_unit" {
   enabled = true
   content = "${data.template_file.bootkube_path_unit.rendered}"
 }
-
