@@ -27,7 +27,7 @@ data "aws_ami" "coreos_ami" {
 
 data "ignition_config" "tnc_worker" {
   append {
-    source = "http://${var.cluster_name}-tnc.${var.base_domain}/ign?role=worker"
+    source = "http://${var.cluster_name}-tnc.${var.base_domain}/ign/v1/role/worker"
   }
 
   files = ["${data.ignition_file.kubelet_worker_kubeconfig.id}"]
