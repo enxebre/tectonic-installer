@@ -14,8 +14,8 @@ resource "aws_security_group_rule" "master_tnc" {
 
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
-  from_port   = 45900
-  to_port     = 45900
+  from_port   = 49500
+  to_port     = 49500
 }
 
 resource "aws_security_group_rule" "master_egress" {

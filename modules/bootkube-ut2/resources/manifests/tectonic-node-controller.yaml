@@ -25,7 +25,7 @@ spec:
         image: ${tnc_bootstrap_image}
         args:
         - --config=/etc/cluster-config/tnc-config
-        - --port=45900
+        - --port=49500
         - --debug
         resources:
           limits:

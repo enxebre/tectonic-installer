@@ -10,7 +10,7 @@ resource "aws_elb" "tnc" {
   connection_draining_timeout = 300
 
   listener {
-    instance_port     = 45900
+    instance_port     = 49500
     instance_protocol = "tcp"
     lb_port           = 80
     lb_protocol       = "tcp"
@@ -20,7 +20,7 @@ resource "aws_elb" "tnc" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 3
-    target              = "TCP:45900"
+    target              = "TCP:49500"
     interval            = 5
   }
 
