@@ -59,7 +59,7 @@ data "archive_file" "assets" {
 # Ignition
 resource "aws_s3_bucket_object" "ignition_bootstrap" {
   bucket  = "${aws_s3_bucket.tectonic.bucket}"
-  key     = "ign"
+  key     = "ign/v1/role/master"
   content = "${local.ignition_bootstrap}"
   acl     = "public-read"
 
