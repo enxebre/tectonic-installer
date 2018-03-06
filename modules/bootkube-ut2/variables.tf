@@ -195,7 +195,7 @@ variable "no_proxy" {
 
 variable "iscsi_enabled" {
   type    = "string"
-  default = false
+  default = "false"
 }
 
 variable "kubeconfig_fetch_cmd" {
