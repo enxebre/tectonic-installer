@@ -105,7 +105,6 @@ variable "dns_server_ip" {
   default = ""
 }
 
-variable "kubeconfig_content" {
-  type    = "string"
-  default = ""
+variable "ign_config" {
+  type = "string"
 }

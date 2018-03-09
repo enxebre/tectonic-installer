@@ -89,7 +89,6 @@ variable "base_domain" {
   description = "Domain on which the ELB records will be created"
 }
 
-variable "kubeconfig_content" {
-  type    = "string"
-  default = ""
+variable "ign_config" {
+  type = "string"
 }

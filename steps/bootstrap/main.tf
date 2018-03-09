@@ -120,7 +120,16 @@ module "masters" {
   ssh_key                      = "${var.tectonic_aws_ssh_key}"
   subnet_ids                   = "${module.vpc.master_subnet_ids}"
   ec2_ami                      = "${var.tectonic_aws_ec2_ami_override}"
-  kubeconfig_content           = "${local.kubeconfig_kubelet_content}"
+  ign_config                   = "${data.template_file.user_data_ign_master.rendered}"
+}
+
+data "template_file" "user_data_ign_master" {
+  template = "${file("${path.module}/../assets/resources/ignition-master.ign")}"
+
+  vars {
+    tnc_url            = "${"http://${var.tectonic_cluster_name}-tnc.${var.tectonic_base_domain}/ign/v1/role/master"}"
+    kubeconfig_content = "${base64encode(local.kubeconfig_kubelet_content)}"
+  }
 }
 
 module "workers" {
@@ -145,7 +154,16 @@ module "workers" {
   worker_iam_role              = "${var.tectonic_aws_worker_iam_role_name}"
   ec2_ami                      = "${var.tectonic_aws_ec2_ami_override}"
   base_domain                  = "${var.tectonic_base_domain}"
-  kubeconfig_content           = "${local.kubeconfig_kubelet_content}"
+  ign_config                   = "${data.template_file.user_data_ign_worker.rendered}"
+}
+
+data "template_file" "user_data_ign_worker" {
+  template = "${file("${path.module}/../assets/resources/ignition-worker.ign")}"
+
+  vars {
+    tnc_url            = "${"http://${var.tectonic_cluster_name}-tnc.${var.tectonic_base_domain}/ign/v1/role/worker"}"
+    kubeconfig_content = "${base64encode(local.kubeconfig_kubelet_content)}"
+  }
 }
 
 module "dns" {
