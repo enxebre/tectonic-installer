@@ -1,5 +1,5 @@
-hash: 9f9b172d4a1f2812571ba4a742908d30ae20b99e486dba316e3bef7c88b9f07c
-updated: 2018-02-07T17:48:55.005344+01:00
+hash: 4e2c95bb9ef4aff57d6ed7911f3b5c353a0696c2504835abfb0cb66fc1c83ef5
+updated: 2018-03-15T12:59:32.794872334+01:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -94,7 +94,7 @@ imports:
   - journal
   - unit
 - name: github.com/coreos/ignition
-  version: d75d0aa3bf307f0954ce4ea8cac56dacec8d16ce
+  version: v0.23.0
   subpackages:
   - config
 - name: github.com/coreos/ipnets

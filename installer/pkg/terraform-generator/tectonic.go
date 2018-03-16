@@ -2,6 +2,7 @@ package terraformgenerator
 
 import (
 	"github.com/coreos/tectonic-installer/installer/pkg/config"
+	configgenerator "github.com/coreos/tectonic-installer/installer/pkg/config-generator"
 )
 
 // Tectonic defines all variables for this platform.
@@ -36,6 +37,9 @@ type Tectonic struct {
 	ServiceCIDR           string   `json:"tectonic_service_cidr,omitempty"`
 	TLSValidityPeriod     int      `json:"tectonic_tls_validity_period,omitempty"`
 	WorkerCount           int      `json:"tectonic_worker_count,omitempty"`
+	IgnitionMaster        string   `json:"tectonic_ignition_master,omitempty"`
+	IgnitionWorker        string   `json:"tectonic_ignition_worker,omitempty"`
+	IgnitionEtcd          string   `json:"tectonic_ignition_etcd,omitempty"`
 }
 
 // NewTectonic returns the config for Tectonic.
@@ -71,5 +75,8 @@ func NewTectonic(cluster config.Cluster) Tectonic {
 		ServiceCIDR:           cluster.Networking.ServiceCIDR,
 		TLSValidityPeriod:     cluster.TLSValidityPeriod,
 		WorkerCount:           cluster.NodeCount(cluster.Worker.NodePools),
+		IgnitionMaster:        configgenerator.IgnitionMaster,
+		IgnitionWorker:        configgenerator.IgnitionWorker,
+		IgnitionEtcd:          configgenerator.IgnitionEtcd,
 	}
 }

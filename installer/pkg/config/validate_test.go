@@ -1,6 +1,9 @@
 package config
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 func TestMissingNodePool(t *testing.T) {
 	cases := []struct {
@@ -325,5 +328,42 @@ func TestSharedNodePool(t *testing.T) {
 		if n != c.errs {
 			t.Errorf("test case %d: expected %d shared node pool errors, got %d", i, c.errs, n)
 		}
+	}
+}
+
+func TestValidateIgnitionFiles(t *testing.T) {
+	c := Cluster{
+		NodePools: nodePools{
+			{
+				Name:         "error: wrong path",
+				IgnitionFile: "do-not-exist.ign",
+			},
+			{
+				Name:         "error: wrong config",
+				IgnitionFile: "fixtures/wrong-ign.ign",
+			},
+			{
+				Name: "ok: no field",
+			},
+			{
+				Name:         "ok: empty field",
+				IgnitionFile: "",
+			},
+			{
+				Name:         "ok: valid config",
+				IgnitionFile: "fixtures/ign.ign",
+			},
+		},
+	}
+
+	errs := c.validateIgnitionFiles()
+	if len(errs) != 2 {
+		t.Errorf("expected: %d ignition errors, got: %d", 2, len(errs))
+	}
+	if !os.IsNotExist(errs[0]) {
+		t.Errorf("expected: notExistError, got: %v", errs[0])
+	}
+	if _, ok := errs[1].(*ErrWrongIgnConfig); !ok {
+		t.Errorf("expected: ErrWrongIgnConfig, got: %v", errs[1])
 	}
 }

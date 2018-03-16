@@ -74,6 +74,7 @@ module "bootkube" {
   calico_mtu          = "1480"
 
   # ignition bootstrapping variables
+  kubeconfig_fetch_cmd      = "/opt/s3-puller.sh ${lower(var.tectonic_cluster_name)}-tnc.${var.tectonic_base_domain}/kubeconfig /etc/kubernetes/kubeconfig"
   no_proxy                  = "${var.tectonic_no_proxy}"
   http_proxy                = "${var.tectonic_http_proxy_address}"
   https_proxy               = "${var.tectonic_https_proxy_address}"

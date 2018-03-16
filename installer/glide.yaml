@@ -270,7 +270,7 @@ import:
 - package: github.com/google/gofuzz
   version: bbcb9da2d746f8bdbd6a936686a0a6067ada0ec5
 - package: github.com/gogo/protobuf
-  version:  v1.0.0
+  version: v1.0.0
   subpackages:
   - gogoproto
   - plugin/defaultcheck
@@ -310,7 +310,7 @@ import:
 - package: github.com/alecthomas/units
   version: 6b4e7dc5e3143b85ea77909c72caf89416fc2915
 - package: github.com/coreos/ignition
-  version: d75d0aa3bf307f0954ce4ea8cac56dacec8d16ce
+  version: v0.23.0
   subpackages:
   - config
 - package: github.com/vincent-petithory/dataurl

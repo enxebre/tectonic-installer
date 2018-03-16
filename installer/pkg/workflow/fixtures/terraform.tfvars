@@ -22,5 +22,8 @@
   "tectonic_networking": "canal",
   "tectonic_service_cidr": "10.3.0.0/16",
   "tectonic_tls_validity_period": 26280,
-  "tectonic_worker_count": 3
+  "tectonic_worker_count": 3,
+  "tectonic_ignition_master": "ignition-master.ign",
+  "tectonic_ignition_worker": "ignition-worker.ign",
+  "tectonic_ignition_etcd": "ignition-etcd.ign"
 }

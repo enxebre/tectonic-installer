@@ -127,8 +127,9 @@ type worker struct {
 type nodePools []nodePool
 
 type nodePool struct {
-	Count int    `yaml:"count"`
-	Name  string `yaml:"name"`
+	Count        int    `yaml:"count"`
+	Name         string `yaml:"name"`
+	IgnitionFile string `yaml:"ignitionFile"`
 }
 
 // Map returns a nodePools' map equivalent.

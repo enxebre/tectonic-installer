@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "generator.go",
+        "ignition.go"
     ],
     importpath = "github.com/coreos/tectonic-installer/installer/pkg/config-generator",
     visibility = ["//visibility:public"],
@@ -17,6 +18,8 @@ go_library(
         "//installer/vendor/k8s.io/apimachinery/pkg/apis/meta/v1:go_default_library",
         "//installer/vendor/github.com/apparentlymart/go-cidr/cidr:go_default_library",
         "//installer/vendor/golang.org/x/crypto/bcrypt:go_default_library",
+        "//installer/vendor/github.com/coreos/ignition/config/v2_0:go_default_library",
+        "//installer/vendor/github.com/coreos/ignition/config/v2_0/types:go_default_library",
     ],
 )
 
