@@ -9,8 +9,8 @@ func NewInstallFullWorkflow(clusterDir string) Workflow {
 		metadata: metadata{clusterDir: clusterDir},
 		steps: []Step{
 			readClusterConfigStep,
-			generateClusterConfigMaps,
 			installTLSAssetsStep,
+			generateClusterConfigMaps,
 			installAssetsStep,
 			generateIgnConfigStep,
 			installTopologyStep,
@@ -31,7 +31,6 @@ func NewInstallTLSWorkflow(clusterDir string) Workflow {
 		metadata: metadata{clusterDir: clusterDir},
 		steps: []Step{
 			readClusterConfigStep,
-			generateClusterConfigMaps,
 			installTLSAssetsStep,
 		},
 	}
