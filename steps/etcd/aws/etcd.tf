@@ -23,22 +23,6 @@ data "template_file" "etcd_hostname_list" {
   template = "${var.tectonic_cluster_name}-etcd-${count.index}.${var.tectonic_base_domain}"
 }
 
-resource "aws_s3_bucket_object" "ignition_etcd" {
-  count   = "${length(data.template_file.etcd_hostname_list.*.id)}"
-  bucket  = "${local.s3_bucket}"
-  key     = "ignition_etcd_${count.index}.json"
-  content = "${local.ignition[count.index]}"
-  acl     = "private"
-
-  server_side_encryption = "AES256"
-
-  tags = "${merge(map(
-      "Name", "${var.tectonic_cluster_name}-ignition-etcd-${count.index}",
-      "KubernetesCluster", "${var.tectonic_cluster_name}",
-      "tectonicClusterID", "${var.tectonic_cluster_id}"
-    ), var.tectonic_aws_extra_tags)}"
-}
-
 module "etcd" {
   source = "../../../modules/aws/etcd"
 
